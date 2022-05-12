@@ -1,28 +1,19 @@
-const express = require("express");
-const connectDB = require("./config/db");
 const dotenv = require("dotenv");
-//const { chats } = require("./data/data");
-const userRoutes = require("./routes/userRoutes");
-const chatRoutes = require("./routes/chatRoutes");
-const messageRoutes = require("./routes/messageRoutes");
-const colors = require("colors");
-
-
-
-
-dotenv.config();
-
-connectDB();
+dotenv.config({ path: 'config/.env' });
+const express = require("express");
+const { connectDB } = require("./config/db");
+const { initRoutes } = require("./initRoutes.js");
+var cors = require('cors')
 const app = express();
 
-app.get('/', (req, res) =>{
-    res.send("API is Running successfully");
-});
+app.use(express.urlencoded({extended: true})); 
+app.use(express.json()); 
+app.use(cors({
+    origin: '*'
+}))
 
-app.use("/api/user", userRoutes);
-app.use("/api/chat", chatRoutes);
-app.use("/api/message", messageRoutes);
+connectDB();
+initRoutes(app);
 
 const PORT = process.env.PORT || 5000
-
-app.listen(5000, console.log(`Server started on PORT ${PORT}`.yellow.bold));
+app.listen(PORT, console.log(`Server started on PORT ${PORT}`));
