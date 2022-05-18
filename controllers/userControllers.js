@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
-// const generateToken = require("../config/generateToken");
+const generateToken = require("../config/generateToken");
 
 //@description     Get or Search all users
 //@route           GET /api/user?search=
@@ -19,19 +19,16 @@ const allUsers = asyncHandler(async (req, res) => {
   res.send(users);
 });
 
-//name, email, password, imageUrl
-
 //@description     Register new user
 //@route           POST /api/user/
 //@access          Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password, image_url } = req.body;
+  const { name, email, password, pic } = req.body;
 
   if (!name || !email || !password) {
     res.status(400);
     throw new Error("Please Enter all the Feilds");
   }
- 
 
   const userExists = await User.findOne({ email });
 
@@ -44,7 +41,7 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     email,
     password,
-    image_url,
+    pic,
   });
 
   if (user) {
@@ -53,8 +50,8 @@ const registerUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
-      image_url: user.image_url,
-      // token: generateToken(user._id),
+      pic: user.pic,
+      token: generateToken(user._id),
     });
   } else {
     res.status(400);
@@ -69,15 +66,15 @@ const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
-  console.log(user)
+
   if (user && (await user.matchPassword(password))) {
     res.json({
       _id: user._id,
-      user_name: user.user_name,
+      name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
-      image_url: user.image_url,
-      // token: generateToken(user._id),
+      pic: user.pic,
+      token: generateToken(user._id),
     });
   } else {
     res.status(401);
