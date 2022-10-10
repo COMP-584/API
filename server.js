@@ -1,6 +1,7 @@
-const dotenv = require("dotenv");
-dotenv.config({ path: "./config/.env" });
-// console.log(process.env);
+const dotenv = require("dotenv"); // may not need this
+
+console.log("env is ==> +++++=====>>", process.env.CURRENT_ENV);
+
 const express = require("express");
 const { connectDB } = require("./config/db");
 const { initRoutes } = require("./initRoutes.js");
