@@ -1,5 +1,14 @@
 # Chat App API
 
+## Running for Developement
+> npm run dev
+
+## Running for testing
+> npm run test
+
+## Running for production
+> npm start
+
 ## Running the API server
 
 1. Install dependencies
