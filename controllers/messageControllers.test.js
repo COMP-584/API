@@ -16,6 +16,6 @@ const testUser = {
 //   await request(app).post("/api/user").send(testUser).expect(201);
 // });
 
-// test("Should send new message in chat", async () => {
-
-// })
+test("temp Test", () => {
+  expect(2 + 2).toBe(4);
+});
