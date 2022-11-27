@@ -48,4 +48,43 @@ test("Should create new chat", async () => {
     .expect(200);
 });
 
+test("Should fetch all chats for a user", async () => {
+  const user1 = await request(app)
+    .post("/api/user/login")
+    .send({
+      email: testUser.email,
+      password: testUser.password,
+    })
+    .expect(200);
+
+  await request(app)
+    .get("/api/chat")
+    .set("Authorization", `Bearer ${user1.body.token}`)
+    .expect(200);
+});
+
+test("Should send message to a chat", async () => {
+
+  const user1 = await request(app)
+    .post("/api/user/login")
+    .send({
+      email: testUser.email,
+      password: testUser.password,
+    })
+    .expect(200);
+
+  const chat = await Chat.findOne({ users: user1.body._id });
+
+  console.log("chat", chat);
+
+  await request(app)
+    .post("/api/chat/" )
+    .set("Authorization", `Bearer ${user1.body.token}`)
+    .send({ message: "test message",userId: user1.body._id})
+    .expect(200);
+});
+
+
+
+
 
