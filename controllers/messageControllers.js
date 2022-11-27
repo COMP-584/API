@@ -19,7 +19,7 @@ const allMessages = asyncHandler(async (req, res) => {
 });
 
 //@description     Create New Message
-//@route           POST /api/Message/
+//@route           POST /api/message/
 //@access          Protected
 const sendMessage = asyncHandler(async (req, res) => {
   const { content, chatId } = req.body;
@@ -35,6 +35,7 @@ const sendMessage = asyncHandler(async (req, res) => {
     chat: chatId,
   };
 
+  console.log("newMessage", newMessage);
   try {
     var message = await Message.create(newMessage);
 
