@@ -10,8 +10,13 @@ const testUser = {
 };
 
 const testUser2 = {
+<<<<<<< HEAD
   name: "test2333",
   email: "test2333@gmail.com",
+=======
+  name: "test2",
+  email: "test2@gmail.com",
+>>>>>>> bce4fbc7e3c1d2d66787aff7380cc6435ecf0f22
   password: "123456",
 };
 

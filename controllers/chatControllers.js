@@ -78,6 +78,8 @@ const fetchChats = asyncHandler(async (req, res) => {
 //@route           POST /api/chat/group
 //@access          Protected
 const createGroupChat = asyncHandler(async (req, res) => {
+  console.log("xXxXxX ==> zZz", req.body);
+
   if (!req.body.users || !req.body.name) {
     return res.status(400).send({ message: "Please Fill all the feilds" });
   }
@@ -91,8 +93,8 @@ const createGroupChat = asyncHandler(async (req, res) => {
   }
   console.log("users1111",req.user);
 
-  users.push(req.user||req.body.user);
-// console.log("users",req.user);
+  users.push(req.user);
+
   try {
     const groupChat = await Chat.create({
       chatName: req.body.name,
