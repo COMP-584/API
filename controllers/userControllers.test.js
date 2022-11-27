@@ -46,7 +46,7 @@ test("Should login existing user and delete currently logged in user", async () 
     })
     .expect(200);
 
-  console.log("response.body", response.body);
+  // console.log("response.body", response.body);
 
   // await request(app)
   //   .delete("/api/user/" + response.body._id)

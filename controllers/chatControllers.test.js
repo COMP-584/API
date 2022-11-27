@@ -4,22 +4,23 @@ const Chat = require("../models/chatModel");
 const User = require("../models/userModel");
 
 const testUser = {
-  name: "test",
-  email: "test@gmail.com",
+  name: "test1111",
+  email: "test1111@gmail.com",
   password: "123456",
 };
 
-const testUse2 = {
-  name: "test2",
-  email: "test2@gmail.com",
+const testUser2 = {
+  name: "test2333",
+  email: "test2333@gmail.com",
   password: "123456",
 };
 
 const testUser3 = {
-  name: "test3",
-  email: "test3@gmail.com",
+  name: "test3333",
+  email: "test33333@gmail.com",
   password: "123456",
 };
+
 
 // test("Should signup a new user!", async () => {
 //   await User.deleteMany({}); // delete all data from User collection the database to avoid "already exists" error
@@ -33,12 +34,18 @@ test("Should create new chat", async () => {
   let res2 = await request(app).post("/api/user").send(testUser2).expect(201);
   let res3 = await request(app).post("/api/user").send(testUser3).expect(201);
 
+
   let user1 = res1.body;
   let user2 = res2.body;
   let user3 = res3.body;
+  // console.log(user1);
+  // req.user = user1;
 
   await request(app)
     .post("/api/chat/group")
-    .send({ user: user1, users: [user1, user2, user3], name: "test group" })
-    .expect(201);
+    .set("Authorization", `Bearer ${user1.token}`)
+    .send({ user: user1, users: [user2._id, user3._id], name: "test group" })
+    .expect(200);
 });
+
+

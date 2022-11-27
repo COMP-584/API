@@ -43,7 +43,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     pic,
   });
-
+  
   if (user) {
     res.status(201).json({
       _id: user._id,
@@ -65,7 +65,7 @@ const registerUser = asyncHandler(async (req, res) => {
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  console.log("---> Trying to login as ...", email);
+  // console.log("---> Trying to login as ...", email);
 
   const user = await User.findOne({ email });
 
@@ -90,7 +90,7 @@ const authUser = asyncHandler(async (req, res) => {
 const deleteUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
 
-  console.log("deleting... ", req.params.id);
+  // console.log("deleting... ", req.params.id);
 
   if (user) {
     await user.remove();
