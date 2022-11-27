@@ -9,7 +9,7 @@ const testUser = {
   password: "123456",
 };
 
-const testUse2 = {
+const testUser2 = {
   name: "test2",
   email: "test2@gmail.com",
   password: "123456",
@@ -39,6 +39,6 @@ test("Should create new chat", async () => {
 
   await request(app)
     .post("/api/chat/group")
-    .send({ user: user1, users: [user1, user2, user3], name: "test group" })
+    .send({ user: testUser, users: [user2._id, user3._id], name: "test group" })
     .expect(201);
 });
