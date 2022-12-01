@@ -43,7 +43,7 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     pic,
   });
-
+  
   if (user) {
     res.status(201).json({
       _id: user._id,
@@ -60,10 +60,12 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 //@description     Auth the user
-//@route           POST /api/users/login
+//@route           POST /api/user/login
 //@access          Public
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+
+  // console.log("---> Trying to login as ...", email);
 
   const user = await User.findOne({ email });
 
@@ -82,4 +84,21 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { allUsers, registerUser, authUser };
+//@description     Delete user
+//@route           DELETE /api/user/:id
+//@access          Private/Admin
+const deleteUser = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  // console.log("deleting... ", req.params.id);
+
+  if (user) {
+    await user.remove();
+    res.status(200).json({ message: "User removed" });
+  } else {
+    res.status(404);
+    throw new Error("User not found");
+  }
+});
+
+module.exports = { allUsers, registerUser, authUser, deleteUser };
