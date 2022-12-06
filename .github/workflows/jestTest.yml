@@ -8,7 +8,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: "latest"
+          node-version: latest
 
       # Install required deps for action
       - name: Install Dependencies
