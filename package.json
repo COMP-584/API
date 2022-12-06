@@ -6,7 +6,8 @@
   "scripts": {
     "start": "env-cmd -f ./config/.env nodemon backend/server.js",
     "dev": "env-cmd -f ./config/.env.dev nodemon backend/server.js",
-    "test": "env-cmd -f ./config/.env.test jest"
+    "test": "env-cmd -f ./config/.env.test jest",
+    "testCoverage": "env-cmd -f ./config/.env.test jest --coverage"
   },
   "author": "COMP-584:ChatGroup",
   "license": "ISC",
