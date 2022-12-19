@@ -43,20 +43,15 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     pic,
   });
-  
-  if (user) {
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin,
-      pic: user.pic,
-      token: generateToken(user._id),
-    });
-  } else {
-    res.status(400);
-    throw new Error("User not found");
-  }
+
+  res.status(201).json({
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    isAdmin: user.isAdmin,
+    pic: user.pic,
+    token: generateToken(user._id),
+  });
 });
 
 //@description     Auth the user
@@ -87,18 +82,18 @@ const authUser = asyncHandler(async (req, res) => {
 //@description     Delete user
 //@route           DELETE /api/user/:id
 //@access          Private/Admin
-const deleteUser = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
+// const deleteUser = asyncHandler(async (req, res) => {
+//   const user = await User.findById(req.params.id);
 
-  // console.log("deleting... ", req.params.id);
+//   // console.log("deleting... ", req.params.id);
 
-  if (user) {
-    await user.remove();
-    res.status(200).json({ message: "User removed" });
-  } else {
-    res.status(404);
-    throw new Error("User not found");
-  }
-});
+//   if (user) {
+//     await user.remove();
+//     res.status(200).json({ message: "User removed" });
+//   } else {
+//     res.status(404);
+//     throw new Error("User not found");
+//   }
+// });
 
-module.exports = { allUsers, registerUser, authUser, deleteUser };
+module.exports = { allUsers, registerUser, authUser };

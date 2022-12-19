@@ -36,23 +36,19 @@ const sendMessage = asyncHandler(async (req, res) => {
   };
 
   console.log("newMessage", newMessage);
-  try {
-    var message = await Message.create(newMessage);
 
-    message = await message.populate("sender", "name pic");
-    message = await message.populate("chat");
-    message = await User.populate(message, {
-      path: "chat.users",
-      select: "name pic email",
-    });
+  var message = await Message.create(newMessage);
 
-    await Chat.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
+  message = await message.populate("sender", "name pic");
+  message = await message.populate("chat");
+  message = await User.populate(message, {
+    path: "chat.users",
+    select: "name pic email",
+  });
 
-    res.json(message);
-  } catch (error) {
-    res.status(400);
-    throw new Error(error.message);
-  }
+  await Chat.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
+
+  res.json(message);
 });
 
 module.exports = { allMessages, sendMessage };

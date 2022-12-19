@@ -37,7 +37,7 @@ test("Should not signup new user with same email as existing user", async () => 
 //     .expect(200);
 // });
 
-test("Should login existing user and delete currently logged in user", async () => {
+test("Should search for other users!", async () => {
   const response = await request(app)
     .post("/api/user/login")
     .send({
@@ -46,11 +46,42 @@ test("Should login existing user and delete currently logged in user", async () 
     })
     .expect(200);
 
-  // console.log("response.body", response.body);
+  let user = response.body;
 
-  // await request(app)
-  //   .delete("/api/user/" + response.body._id)
-  //   .set("Authorization", `Bearer ${response.body.token}`)
-  //   .send()
-  //   .expect(200);
+  await request(app)
+    .get("/api/user?search=Monica")
+    .set("Authorization", `Bearer ${response.body.token}`)
+    .expect(200);
 });
+
+test("Should give error if not all data are given!", async () => {
+  await request(app)
+    .post("/api/user")
+    .send({
+      name: "test",
+    })
+    .expect(400);
+});
+
+test("Should not login if password is incorrect!", async () => {
+  const response = await request(app)
+    .post("/api/user/login")
+    .send({
+      email: testUser.email,
+      password: "incorrect password",
+    })
+    .expect(401);
+});
+
+// test("should delete user!", async () => {
+//   const response = await request(app)
+//     .post("/api/user")
+//     .send(testUser)
+//     .expect(201);
+
+//   const user = response.body;
+//   await request(app)
+//     .delete("/api/user/" + user._id)
+//     .set("Authorization", `Bearer ${user.token}`)
+//     .expect(200);
+// });

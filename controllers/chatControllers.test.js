@@ -81,6 +81,46 @@ test("Should send message to a chat", async () => {
     .expect(200);
 });
 
+test("Should get error if not userID provided!", async () => {
+  const user1 = await request(app)
+    .post("/api/user/login")
+    .send({
+      email: testUser.email,
+      password: testUser.password,
+    })
+    .expect(200);
+
+  const chat = await Chat.findOne({ users: user1.body._id });
+
+  console.log("chat", chat);
+
+  await request(app)
+    .post("/api/chat/")
+    .set("Authorization", `Bearer ${user1.body.token}`)
+    .send({ message: "test message" })
+    .expect(400);
+});
+
+test("Should give already existed chat!", async () => {
+  const user1 = await request(app)
+    .post("/api/user/login")
+    .send({
+      email: testUser.email,
+      password: testUser.password,
+    })
+    .expect(200);
+
+  const chat = await Chat.findOne({ users: user1.body._id });
+
+  console.log("chat", chat);
+
+  await request(app)
+    .post("/api/chat/")
+    .set("Authorization", `Bearer ${user1.body.token}`)
+    .send({ message: "test message", userId: user1.body._id, chatId: chat._id })
+    .expect(200);
+});
+
 test("Should fetch all messages for a chat", async () => {
   const user1 = await request(app)
     .post("/api/user/login")
@@ -120,6 +160,24 @@ test("Should rename a group", async () => {
     .expect(200);
 });
 
+test("Should give error is invalid chat ID provided!", async () => {
+  const user1 = await request(app)
+    .post("/api/user/login")
+    .send({
+      email: testUser.email,
+      password: testUser.password,
+    })
+    .expect(200);
+
+  await request(app)
+    .put("/api/chat/rename")
+    .set("Authorization", `Bearer ${user1.body.token}`)
+    .send({
+      chatId: "638308f254f77998fd676083", // invalid chat ID
+      chatName: "new name",
+    })
+    .expect(404);
+});
 
 test("Should add a user to a group", async () => {
   const user1 = await request(app)
@@ -159,4 +217,72 @@ test("Should remove a user from a group", async () => {
     .set("Authorization", `Bearer ${user1.body.token}`)
     .send({ chatId: chat._id, userId: user1.body._id })
     .expect(200);
+});
+
+test("Should give error if Group ID is invalud!", async () => {
+  const user1 = await request(app)
+    .post("/api/user/login")
+    .send({
+      email: testUser.email,
+      password: testUser.password,
+    })
+    .expect(200);
+
+  await request(app)
+    .put("/api/chat/groupremove")
+    .set("Authorization", `Bearer ${user1.body.token}`)
+    .send({
+      chatId: "638308f254f77998fd676083", // invalid chat ID
+      userId: user1.body._id,
+    })
+    .expect(404);
+});
+
+test("Should give error if less users provided!", async () => {
+  await User.deleteMany({}); // delete all data from User collection the database to avoid "already exists" error
+  let res1 = await request(app).post("/api/user").send(testUser).expect(201);
+  let res2 = await request(app).post("/api/user").send(testUser2).expect(201);
+
+  let user1 = res1.body;
+  let user2 = res2.body;
+
+  await request(app)
+    .post("/api/chat/group")
+    .set("Authorization", `Bearer ${user1.token}`)
+    .send({ user: user1, users: [user2._id], name: "test group" })
+    .expect(400);
+});
+
+test("Should give error if requested data is not provided for Group creation!", async () => {
+  await User.deleteMany({}); // delete all data from User collection the database to avoid "already exists" error
+  let res1 = await request(app).post("/api/user").send(testUser).expect(201);
+  let res2 = await request(app).post("/api/user").send(testUser2).expect(201);
+
+  let user1 = res1.body;
+  let user2 = res2.body;
+
+  await request(app)
+    .post("/api/chat/group")
+    .set("Authorization", `Bearer ${user1.token}`)
+    .send({ user: user1, users: [user2._id] })
+    .expect(400);
+});
+
+test("Should give error is invalid chat id provided!", async () => {
+  const user1 = await request(app)
+    .post("/api/user/login")
+    .send({
+      email: testUser.email,
+      password: testUser.password,
+    })
+    .expect(200);
+
+  await request(app)
+    .put("/api/chat/groupadd")
+    .set("Authorization", `Bearer ${user1.body.token}`)
+    .send({
+      chatId: "638308f254f77998fd676083", // invalid chat ID
+      userId: user1.body._id,
+    })
+    .expect(404);
 });
